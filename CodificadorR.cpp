@@ -3,21 +3,22 @@
 #include <vector>
 #include <string>
 #include <map>
-#include "Comandos.h"
 #include <bitset>
+#include "Comandos.h"
+#include "CodificadorR.h"
 
 using namespace std;
 
-long int regis_to_bin(int op, int rd, int rs, int rt, int sa, int funct, int imediato) {
-	long int cod;
-	int op_bin = bitset<6>(op);
-	int rs_bin = bitset<5>(rs);
-	int rt_bin = bitset<5>(rt);
-	int rd_bin = bitset<5>(rd);
-	int sa_bin = bitset<5>(imediato);
-	int funct_bin = bitset<6>(funct);
+long int codificador_typeR(int op, int rd, int rs, int rt, int sa, int funct) {
+    long int cod = (op << 26) | (rs << 21) | (rt << 16) | (rd << 11) | (sa << 6) | funct;
 
-	return op_bin + rs_bin + rt_bin + rd_bin + sa_bin + funct_bin;
+    return cod;
+}
+
+long int codificador_typeI(int op, int rs, int rt, int immediate) {
+    long int cod = (op << 26) | (rs << 21) | (rt << 16) | immediate;
+
+    return cod;
 }
 
 
