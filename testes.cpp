@@ -12,9 +12,10 @@ using namespace std;
 
 
 int main() {
-    map<string, RComando> MapComandos = addRComandos(); // Mapeando os comandos existentes
+    map<string, Comando> MapComandos = Comandos(); // Mapeando os comandos existentes
     map<string, int> mapRegis = addRegistradores(); // Mapeando os registradores
-    int op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, addrees = 0, imediato; // Inicializando 
+    int op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, constante = 0; // Inicializando 
+     char pular = '\n';
 
 
     ifstream fin("teste.asm", ios_base::in); // abrir arquivo assembly pra leitura
@@ -38,7 +39,7 @@ int main() {
     string input;
 
     while (getline(fin, input)) { // é pra ler cada linha
-        op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, addrees = 0, imediato = NULL;
+        op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, constante = NULL;
         if (input.empty()) continue; // Ignora linhas em branco
 
         //string input = "sll $8,$9,3";
@@ -62,7 +63,7 @@ int main() {
                 registradores.push_back(variavel); // Caso seja vai para o vetor de registradores
             }
             else {
-                imediato = stoi(variavel); // STRING TO INTEGER ; valor immediate
+                constante = stoi(variavel); // STRING TO INTEGER ; valor immediate
             }
 
         }
@@ -91,51 +92,50 @@ int main() {
                         rs = registradoresInt[1];
                         rt = registradoresInt[2];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, rs, rt, i.second.sa, i.second.func)).to_string(); // Codifica a instruçãp
+                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, rs, rt, i.second.constante, i.second.func)).to_string(); // Codifica a instruçãp
                         fout.write(binaryInstruction.c_str(), binaryInstruction.size());
 
                     }
-                    else if(registradoresInt.size() == 2 && imediato == NULL) { // Verificando para comandos que utilizam 2 registradores e nenhuma constante
+                    else if(registradoresInt.size() == 2 && constante == NULL) { // Verificando para comandos que utilizam 2 registradores e nenhuma constante
                         rs = registradoresInt[0];
                         rt = registradoresInt[1];
                        
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, i.second.rd, rs, rt, i.second.sa, i.second.func)).to_string(); // Codifica a instruçãp
+                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, i.second.rd, rs, rt, i.second.constante, i.second.func)).to_string(); // Codifica a instruçãp
                         fout.write(binaryInstruction.c_str(), binaryInstruction.size());
                     }
-                    else if (imediato != NULL) { // Verificando para comandos que utilizam 2 registradores e constante(shamt)
+                    else if (constante != NULL) { // Verificando para comandos que utilizam 2 registradores e constante(shamt)
                         rd = registradoresInt[0];
                         rt = registradoresInt[1];
-                        sa = imediato;
+                      
 
-                        cout << rs << endl << rd << endl << sa;
-
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, i.second.rs, rt, sa, i.second.func)).to_string(); // Codifica a instruçãp
+                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, i.second.rs, rt, constante, i.second.func)).to_string(); // Codifica a instruçãp
                         fout.write(binaryInstruction.c_str(), binaryInstruction.size());
                     }
                     else if(i.first == "jr") { // Verificando se é o comando jr
                         rs = registradoresInt[0];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, i.second.rd, rs, i.second.rt, i.second.sa, i.second.func)).to_string(); // Codifica a instruçãp
+                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, i.second.rd, rs, i.second.rt, i.second.constante, i.second.func)).to_string(); // Codifica a instruçãp
                         fout.write(binaryInstruction.c_str(), binaryInstruction.size());
                     }
                     else { // Se não é o jr então só sobra os comandos mfhi e mflo
                         rd = registradoresInt[0];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, i.second.rs, i.second.rt, i.second.sa, i.second.func)).to_string(); // Codifica a instruçãp
+                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, i.second.rs, i.second.rt, i.second.constante, i.second.func)).to_string(); // Codifica a instruçãp
                         fout.write(binaryInstruction.c_str(), binaryInstruction.size());
                     }
 
 
+                    break;
                 }
             }
         }
 
 
-        //cout << bitset<6>(op) << bitset<5>(rs) << bitset<5>(rt) << bitset<5>(rd) << bitset<5>(sa) << bitset<6>(funct); // tipo R
+        fout.write(&pular, sizeof(pular));
 
+    }
         fin.close();
         fout.close();
 
         return 0;
-    }
 }

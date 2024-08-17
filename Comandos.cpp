@@ -5,27 +5,44 @@
 #include <bitset>
 using namespace std;
 
-map<string, RComando> addRComandos() {
+map<string, Comando> Comandos() {
+    // Comandos tipo R
+    Comando sll{ "sll", 'R', 0, 0, 0, 0, 0, 0 };
+    Comando srl{ "srl", 'R', 0, 0, 0, 0, 0, 2 };
+    Comando jr{ "jr", 'R', 0, 0, 0, 0, 0, 8 };
+    Comando mfhi{ "mfhi", 'R', 0, 0, 0, 0, 0, 16 };
+    Comando mflo{ "mflo", 'R', 0, 0, 0, 0, 0, 18 };
+    Comando mult{ "mult", 'R', 0, 0, 0, 0, 0, 24 };
+    Comando multu{ "multu",'R', 0, 0, 0, 0, 0, 25 };
+    Comando div{ "div", 'R', 0, 0, 0, 0, 0, 26 };
+    Comando divu{ "divu", 'R', 0, 0, 0, 0, 0, 27 };
+    Comando add{ "add", 'R', 0, 0, 0, 0, 0, 32 };
+    Comando addu{ "addu", 'R', 0, 0, 0, 0, 0, 33 };
+    Comando sub{ "sub", 'R', 0, 0, 0, 0, 0, 34 };
+    Comando subu{ "subu", 'R', 0, 0, 0, 0, 0, 35 };
+    Comando andd{ "and", 'R', 0, 0, 0, 0, 0, 36 }; // ja tem and no c++
+    Comando orr{ "or", 'R', 0, 0, 0, 0, 0, 37 }; // ja tem or
+    Comando slt{ "slt", 'R', 0, 0, 0, 0, 0, 42 };
+    Comando sltu{ "sltu", 'R', 0, 0, 0, 0, 0, 43 };
+    Comando mul{ "mul", 'R', 28, 0, 0, 0, 0, 2};
+    // Comandos tipo I
+    Comando beq{ "beq", 'I', 4, 0, 0, 0, 0, 0 };
+    Comando bne{ "bne", 'I', 5, 0, 0, 0, 0, 0 };
+    Comando addi{ "addi", 'I', 8, 0, 0, 0, 0, 0  };
+    Comando addiu{ "addiu", 'I', 9, 0, 0, 0, 0, 0 };
+    Comando slti{ "slti", 'I', 10, 0, 0, 0, 0, 0 };
+    Comando sltiu{ "sltiu", 'I', 11, 0, 0, 0, 0, 0 };
+    Comando andi{ "andi", 'I', 12, 0, 0, 0, 0, 0 };
+    Comando ori{ "ori", 'I', 13, 0, 0, 0, 0, 0 };
+    Comando lui{ "lui", 'I', 15, 0, 0, 0, 0, 0 };
+    Comando lw{ "lw", 'I', 35, 0, 0, 0, 0, 0 };
+    Comando sw{ "sw", 'I', 44, 0, 0, 0, 0, 0 };
+    // Comandos tipo J
+    Comando j{ "j", 'J', 2, 0, 0, 0, 0, 0 };
+    Comando jal{ "jal", 'J', 3, 0, 0, 0, 0, 0 };
 
-    RComando sll{ "sll", 'R', 0, 0, 0, 0, 0, 0 };
-    RComando srl{ "srl", 'R', 0, 0, 0, 0, 0, 2 };
-    RComando jr{ "jr", 'R', 0, 0, 0, 0, 0, 8 };
-    RComando mfhi{ "mfhi", 'R', 0, 0, 0, 0, 0, 16 };
-    RComando mflo{ "mflo", 'R', 0, 0, 0, 0, 0, 18 };
-    RComando mult{ "mult", 'R', 0, 0, 0, 0, 0, 24 };
-    RComando multu{ "multu",'R', 0, 0, 0, 0, 0, 25 };
-    RComando div{ "div", 'R', 0, 0, 0, 0, 0, 26 };
-    RComando divu{ "divu", 'R', 0, 0, 0, 0, 0, 27 };
-    RComando add{ "add", 'R', 0, 0, 0, 0, 0, 32 };
-    RComando addu{ "addu", 'R', 0, 0, 0, 0, 0, 33 };
-    RComando sub{ "sub", 'R', 0, 0, 0, 0, 0, 34 };
-    RComando subu{ "subu", 'R', 0, 0, 0, 0, 0, 35 };
-    RComando andd{ "and", 'R', 0, 0, 0, 0, 0, 36 }; // ja tem and no c++
-    RComando orr{ "or", 'R', 0, 0, 0, 0, 0, 37 }; // ja tem or
-    RComando slt{ "slt", 'R', 0, 0, 0, 0, 0, 42 };
-    RComando sltu{ "sltu", 'R', 0, 0, 0, 0, 0, 43 };
-
-	map<string, RComando> mapComandos = { 
+	map<string, Comando> mapComandos = { 
+        // Comandos tipo R
         {"sll",   sll},
         {"srl",   srl},
         {"jr",    jr},
@@ -42,27 +59,9 @@ map<string, RComando> addRComandos() {
         {"and",   andd},
         {"or",    orr},
         {"slt",   slt},
-        {"sltu",  sltu}
-    };
-
-	return mapComandos;
-}
-
-map<string, IComando> addIComandos() {
-
-    IComando beq{ "beq", 'I', 4, 0, 0, 0 };
-    IComando bne{ "bne", 'I', 5, 0, 0, 0 };
-    IComando addi{ "addi", 'I', 8, 0, 0, 0 };
-    IComando addiu{ "addiu", 'I', 9, 0, 0, 0 };
-    IComando slti{ "slti", 'I', 10, 0, 0, 0 };
-    IComando sltiu{ "sltiu", 'I', 11, 0, 0, 0 };
-    IComando andi{ "andi", 'I', 12, 0, 0, 0 };
-    IComando ori{ "ori", 'I', 13, 0, 0, 0 };
-    IComando lui{ "lui", 'I', 15, 0, 0, 0 };
-    IComando lw{ "lw", 'I', 35, 0, 0, 0 };
-    IComando sw{ "sw", 'I', 44, 0, 0, 0 };
-
-    map<string, IComando> mapComandos = {
+        {"sltu",  sltu},
+        {"mul",   mul},
+        // Comandos tipo I
         {"beq",   beq},
         {"bne",   bne},
         {"addi",  addi},
@@ -73,10 +72,14 @@ map<string, IComando> addIComandos() {
         {"ori",   ori},
         {"lui",   lui},
         {"lw",    lw},
-        {"sw",    sw}
+        {"sw",    sw},
+        // Comandos tipo J
+        {"j",     j },
+        {"jal",   jal}
     };
 
     return mapComandos;
+  
 }
 
 map<string, int> addRegistradores() {
