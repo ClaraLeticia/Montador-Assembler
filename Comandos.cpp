@@ -25,6 +25,7 @@ map<string, Comando> Comandos() {
     Comando slt{ "slt", 'R', 0, 0, 0, 0, 0, 42 };
     Comando sltu{ "sltu", 'R', 0, 0, 0, 0, 0, 43 };
     Comando mul{ "mul", 'R', 28, 0, 0, 0, 0, 2};
+
     // Comandos tipo I
     Comando beq{ "beq", 'I', 4, 0, 0, 0, 0, 0 };
     Comando bne{ "bne", 'I', 5, 0, 0, 0, 0, 0 };
@@ -37,6 +38,7 @@ map<string, Comando> Comandos() {
     Comando lui{ "lui", 'I', 15, 0, 0, 0, 0, 0 };
     Comando lw{ "lw", 'I', 35, 0, 0, 0, 0, 0 };
     Comando sw{ "sw", 'I', 44, 0, 0, 0, 0, 0 };
+
     // Comandos tipo J
     Comando j{ "j", 'J', 2, 0, 0, 0, 0, 0 };
     Comando jal{ "jal", 'J', 3, 0, 0, 0, 0, 0 };
@@ -61,6 +63,7 @@ map<string, Comando> Comandos() {
         {"slt",   slt},
         {"sltu",  sltu},
         {"mul",   mul},
+
         // Comandos tipo I
         {"beq",   beq},
         {"bne",   bne},
@@ -73,6 +76,7 @@ map<string, Comando> Comandos() {
         {"lui",   lui},
         {"lw",    lw},
         {"sw",    sw},
+
         // Comandos tipo J
         {"j",     j },
         {"jal",   jal}
