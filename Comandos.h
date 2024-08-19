@@ -12,6 +12,7 @@ struct Comando {
 	int rd;
 	int constante; // Comandos tipo R = shamt;  Comandos tipo I = imediato; Comandos tipo J = endereço
 	int func;
+	int ocorrencias = 0;
 };
 
 

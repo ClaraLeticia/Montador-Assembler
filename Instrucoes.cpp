@@ -70,6 +70,7 @@ void codificarInstrucao( string inputArquivo, string formato) {
 
         for (auto i : MapComandos) {
             if (comando == i.first) {
+                i.second.ocorrencias += 1;
                 switch (i.second.tipo)
                 {
                 case 'R':
@@ -151,7 +152,7 @@ void codificarInstrucao( string inputArquivo, string formato) {
                         auto binaryInstruction = bitset<32>(codificador_typeI(i.second.opcode, i.second.rs, rt, constante)).to_string(); // Codifica a instrução
                         fout.write(binaryInstruction.c_str(), binaryInstruction.size());
                     }
-                    break;
+                    
                 case 'J':
                 {
                     /*
@@ -168,8 +169,10 @@ void codificarInstrucao( string inputArquivo, string formato) {
                 default:
                     break;
                 }
-
+                    
+                break;
             }
+           
         }
 
         fout.write(&pular, sizeof(pular));
@@ -177,4 +180,10 @@ void codificarInstrucao( string inputArquivo, string formato) {
     }
         fin.close();
         fout.close();
+
+        for (auto i : MapComandos) {
+            if (i.second.ocorrencias != 0) {
+                cout << i.first << " - " << i.second.ocorrencias;
+            }
+        }
 }

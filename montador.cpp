@@ -18,6 +18,8 @@ int main(int argc, char* argv[]) {
 	
 
 	codificarInstrucao(inputArquivo, formato);
+
+
 	
 	
 }
