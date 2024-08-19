@@ -31,6 +31,10 @@ void codificarInstrucao( string inputArquivo, string formato) {
     
     ofstream fout(outputArquivo, ios_base::binary); // abre arquivo bin para escrita
 
+    if (formato == "-h") {
+        fout << "v2.0 raw\n";
+    }
+
     string input;
 
     while (getline(fin, input)) { // é pra ler cada linha
@@ -63,9 +67,7 @@ void codificarInstrucao( string inputArquivo, string formato) {
 
         }
 
-        registradoresInt = regs(registradores, mapRegis); // Armazena apenas o valor DECIMAL do registrador; ex: $t0 = 8 e $8 = 8       
-
-        
+        registradoresInt = regs(registradores, mapRegis); // Armazena apenas o valor DECIMAL do registrador; ex: $t0 = 8 e $8 = 8        
 
         for (auto i : MapComandos) {
             if (comando == i.first) {
