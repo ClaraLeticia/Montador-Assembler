@@ -9,6 +9,7 @@
 #include "BancoRegs.h"
 #include "Codificador.h"
 #include "Instrucoes.h"
+#include "cpi.h"
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -16,6 +17,7 @@ int main(int argc, char* argv[]) {
 	string inputArquivo = argv[1]; // arquivo assembly
 	string formato = argv[2]; // '-b' ou '-h'
 	
+	calcularCPI();
 
 	codificarInstrucao(inputArquivo, formato);
 	
