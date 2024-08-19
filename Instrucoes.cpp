@@ -1,5 +1,6 @@
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <vector>
 #include <string>
 #include <map>
@@ -12,11 +13,11 @@ using namespace std;
 
 void codificarInstrucao( string inputArquivo, string formato) {
    
-
     map<string, Comando> MapComandos = Comandos(); // Mapeando os comandos existentes
     map<string, int> mapRegis = addRegistradores(); // Mapeando os registradores
     int op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, constante = 0; // Inicializando 
-     char pular = '\n';
+    char pular = '\n';
+    auto codificacao = bitset<32>(0);
 
     ifstream fin(inputArquivo, ios_base::in); // abrir arquivo assembly pra leitura
     string outputArquivo = inputArquivo.substr(0, inputArquivo.find_last_of('.')); // extrai o nome do arquivo sem a extensão .asm
@@ -49,8 +50,6 @@ void codificarInstrucao( string inputArquivo, string formato) {
         // Usar getline para separar a string com base no espaçamento buscando o comando
         getline(ss, comando, ' ');
 
-
-
         while (getline(ss, variavel, ',')) { // le cada palavra da linha, separadads por virgula
 
             
@@ -68,10 +67,11 @@ void codificarInstrucao( string inputArquivo, string formato) {
 
         
 
-        for (auto i : MapComandos) {
-            if (comando == i.first) {
-                i.second.ocorrencias += 1;
-                switch (i.second.tipo)
+        map<string, Comando> ::iterator it;
+        for (it = MapComandos.begin(); it != MapComandos.end(); it++) {
+            if (comando == (*it).first) {
+                (*it).second.ocorrencias += 1;
+                switch ((*it).second.tipo)
                 {
                 case 'R':
                     /*
@@ -89,35 +89,36 @@ void codificarInstrucao( string inputArquivo, string formato) {
                         rs = registradoresInt[1];
                         rt = registradoresInt[2];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, rs, rt, i.second.constante, i.second.func)).to_string(); // Codifica a instrução
-                        fout.write(binaryInstruction.c_str(), binaryInstruction.size());
-
+                        codificacao = codificador_typeR((*it).second.opcode, rd, rs, rt, (*it).second.constante, (*it).second.func); // Codifica a instrução                    
                     }
                     else if (registradoresInt.size() == 2 && constante == NULL) { // Verificando para comandos que utilizam 2 registradores e nenhuma constante
                         rs = registradoresInt[0];
                         rt = registradoresInt[1];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, i.second.rd, rs, rt, i.second.constante, i.second.func)).to_string(); // Codifica a instrução
-                        fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                        codificacao = codificador_typeR((*it).second.opcode, (*it).second.rd, rs, rt, (*it).second.constante, (*it).second.func); // Codifica a instrução                     
                     }
                     else if (constante != NULL) { // Verificando para comandos que utilizam 2 registradores e constante(shamt)
                         rd = registradoresInt[0];
                         rt = registradoresInt[1];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, i.second.rs, rt, constante, i.second.func)).to_string(); // Codifica a instrução
-                        fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                        codificacao = codificador_typeR((*it).second.opcode, rd, (*it).second.rs, rt, constante, (*it).second.func); // Codifica a instrução                    
                     }
-                    else if (i.first == "jr") { // Verificando se é o comando jr
+                    else if ((*it).first == "jr") { // Verificando se é o comando jr
                         rs = registradoresInt[0];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, i.second.rd, rs, i.second.rt, i.second.constante, i.second.func)).to_string(); // Codifica a instrução
-                        fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                        codificacao = codificador_typeR((*it).second.opcode, (*it).second.rd, rs, (*it).second.rt, (*it).second.constante, (*it).second.func); // Codifica a instrução
                     }
-                    else if(i.first == "mfhi" || i.first == "mflo") { // Se não é o jr então só sobra os comandos mfhi e mflo
+                    else if((*it).first == "mfhi" || (*it).first == "mflo") { // Se não é o jr então só sobra os comandos mfhi e mflo
                         rd = registradoresInt[0];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeR(i.second.opcode, rd, i.second.rs, i.second.rt, i.second.constante, i.second.func)).to_string(); // Codifica a instrução
-                        fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                        codificacao = codificador_typeR((*it).second.opcode, rd, (*it).second.rs, (*it).second.rt, (*it).second.constante, (*it).second.func); // Codifica a instrução
+                    }
+
+                    if (formato == "-b") {
+                        fout.write(bitset<32>(codificacao).to_string().c_str(), codificacao.size());
+                    }
+                    else if (formato == "-h") {
+                        fout << hex << setw(8) << setfill('0') << stoi(codificacao.to_string(), nullptr, 2);
                     }
 
                     break;
@@ -131,28 +132,34 @@ void codificarInstrucao( string inputArquivo, string formato) {
                     */
 
                     if (registradoresInt.size() == 2) {
-                        if (i.second.opcode == 4 or i.second.opcode == 5) { // restrição para o 'beq' e 'bne'
+                        if ((*it).second.opcode == 4 or (*it).second.opcode == 5) { // restrição para o 'beq' e 'bne'
                             rs = registradoresInt[0];
                             rt = registradoresInt[1];
 
-                            auto binaryInstruction = bitset<32>(codificador_typeI(i.second.opcode, rs, rt, constante)).to_string(); // Codifica a instrução
-                            fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                            codificacao = codificador_typeI((*it).second.opcode, rs, rt, constante); // Codifica a instrução                          
                         }
                         else { // todos os outros comandos
                             rs = registradoresInt[1];
                             rt = registradoresInt[0];
 
-                            auto binaryInstruction = bitset<32>(codificador_typeI(i.second.opcode, rs, rt, constante)).to_string(); // Codifica a instrução
-                            fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                            codificacao = codificador_typeI((*it).second.opcode, rs, rt, constante); // Codifica a instrução                            
                         }
                     }
                     else if (registradoresInt.size() == 1) { // comando 'lui'
                         rt = registradoresInt[0];
 
-                        auto binaryInstruction = bitset<32>(codificador_typeI(i.second.opcode, i.second.rs, rt, constante)).to_string(); // Codifica a instrução
-                        fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                        codificacao = codificador_typeI((*it).second.opcode, (*it).second.rs, rt, constante); // Codifica a instrução
                     }
-                    
+
+                    if (formato == "-b") {
+                        fout.write(bitset<32>(codificacao).to_string().c_str(), codificacao.size());
+                    }
+                    else if (formato == "-h") {
+                        fout << hex << setw(8) << setfill('0') << stoi(codificacao.to_string(), nullptr, 2);
+                    }
+
+                    break;
+
                 case 'J':
                 {
                     /*
@@ -160,8 +167,14 @@ void codificarInstrucao( string inputArquivo, string formato) {
                     - 1 constante (endereço)
                     */
 
-                    auto binaryInstruction = bitset<32>(codificador_typeJ(i.second.opcode, constante)).to_string(); // Codifica a instrução
-                    fout.write(binaryInstruction.c_str(), binaryInstruction.size());
+                    codificacao = codificador_typeJ((*it).second.opcode, constante); // Codifica a instrução
+                    
+                    if (formato == "-b") {
+                        fout.write(bitset<32>(codificacao).to_string().c_str(), codificacao.size());
+                    }
+                    else if (formato == "-h") {
+                        fout << hex << setw(8) << setfill('0') << stoi(codificacao.to_string(), nullptr, 2);
+                    }
 
                     break;
 
@@ -183,7 +196,7 @@ void codificarInstrucao( string inputArquivo, string formato) {
 
         for (auto i : MapComandos) {
             if (i.second.ocorrencias != 0) {
-                cout << i.first << " - " << i.second.ocorrencias;
+                cout << i.first << " - " << i.second.ocorrencias << endl;
             }
         }
 }
