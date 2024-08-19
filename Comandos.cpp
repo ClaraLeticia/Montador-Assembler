@@ -1,8 +1,8 @@
 #include <iostream>
 #include <string>
 #include <map>
-#include "Comandos.h"
 #include <bitset>
+#include "Comandos.h"
 using namespace std;
 
 map<string, Comando> Comandos() {
