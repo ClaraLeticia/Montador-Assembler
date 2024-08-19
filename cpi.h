@@ -1,3 +1,4 @@
 #pragma once
-
-void calcularCPI();
+#include <map>
+#include "Comandos.h"
+void calcularCPI(map<string, Comando>);

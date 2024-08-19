@@ -10,6 +10,7 @@
 #include "Codificador.h"
 #include "Instrucoes.h"
 #include "cpi.h"
+#include <map>
 using namespace std;
 
 int main(int argc, char* argv[]) {
@@ -17,9 +18,9 @@ int main(int argc, char* argv[]) {
 	string inputArquivo = argv[1]; // arquivo assembly
 	string formato = argv[2]; // '-b' ou '-h'
 	
-	calcularCPI();
+	map<string, Comando> qtdInstrucoes = codificarInstrucao(inputArquivo, formato);
+	calcularCPI(qtdInstrucoes);
 
-	codificarInstrucao(inputArquivo, formato);
 
 
 	

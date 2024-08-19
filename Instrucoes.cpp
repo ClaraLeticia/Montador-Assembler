@@ -11,7 +11,7 @@
 #include "Codificador.h"
 using namespace std;
 
-void codificarInstrucao( string inputArquivo, string formato) {
+map<string, Comando> codificarInstrucao( string inputArquivo, string formato) {
    
     map<string, Comando> MapComandos = Comandos(); // Mapeando os comandos existentes
     map<string, int> mapRegis = addRegistradores(); // Mapeando os registradores
@@ -196,9 +196,5 @@ void codificarInstrucao( string inputArquivo, string formato) {
         fin.close();
         fout.close();
 
-        for (auto i : MapComandos) {
-            if (i.second.ocorrencias != 0) {
-                cout << i.first << " - " << i.second.ocorrencias << endl;
-            }
-        }
+        return MapComandos;
 }

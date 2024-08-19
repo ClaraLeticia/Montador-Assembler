@@ -1,4 +1,5 @@
 #pragma once
 #include <string>
+#include "Comandos.h"
 
-void codificarInstrucao(string, string);
+map<string, Comando> codificarInstrucao(string, string);

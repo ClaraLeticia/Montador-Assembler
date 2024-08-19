@@ -5,9 +5,10 @@
 #include "cpi.h"
 #include <vector>
 #include <map>
+#include "Comandos.h"
 using namespace std;
 
-void calcularCPI() {
+void calcularCPI(map<string, Comando> qtdComandos ) {
     fstream fin;
     string input;
     string linha;
@@ -32,6 +33,12 @@ void calcularCPI() {
     }
 
     fin.close();
+
+    for (auto i : qtdComandos) {
+        if (i.second.ocorrencias != 0) {
+            cout << i.first << " - " << i.second.ocorrencias << endl;
+        }
+    }
 
     for (auto i : mapClock) {
         cout << i.first << " " << i.second << endl;
