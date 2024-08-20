@@ -37,7 +37,7 @@ map<string, Comando> Comandos() {
     Comando ori{ "ori", 'I', 13, 0, 0, 0, 0, 0 };
     Comando lui{ "lui", 'I', 15, 0, 0, 0, 0, 0 };
     Comando lw{ "lw", 'I', 35, 0, 0, 0, 0, 0 };
-    Comando sw{ "sw", 'I', 44, 0, 0, 0, 0, 0 };
+    Comando sw{ "sw", 'I', 43, 0, 0, 0, 0, 0 };
 
     // Comandos tipo J
     Comando j{ "j", 'J', 2, 0, 0, 0, 0, 0 };
