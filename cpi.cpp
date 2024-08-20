@@ -33,14 +33,22 @@ void calcularCPI(map<string, Comando> qtdComandos ) {
     }
 
     fin.close();
+    int soma = 0, n = 0;
 
+    cout << "Quantidades por tipo de instruções:" << endl;
     for (auto i : qtdComandos) {
         if (i.second.ocorrencias != 0) {
-            cout << i.first << " - " << i.second.ocorrencias << endl;
+            cout << i.first << ": " << i.second.ocorrencias << " " << endl;
+            for (auto j : mapClock) {
+                if (i.first == j.first) {  
+                    soma+= i.second.ocorrencias * j.second;
+                    break;
+                }
+            }
+            n++;
         }
     }
+    
+    cout << endl << "CPI médio:" << soma / float(n);
 
-    for (auto i : mapClock) {
-        cout << i.first << " " << i.second << endl;
-    }
 }
