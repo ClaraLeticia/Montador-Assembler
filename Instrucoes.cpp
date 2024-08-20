@@ -37,7 +37,17 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato) {
 
     string input;
 
-    while (getline(fin, input)) { // é pra ler cada linha
+    while (getline(fin, input)) { // é pra ler cada linha  
+        size_t comentario = input.find('#');
+
+        if (comentario != string::npos) {
+            input = input.substr(0, comentario - 1); // input vira uma substring de input que vai da posição 0 até a posição que se encontra o comentário
+        }
+        /*
+        if (comentario != string::npos) {
+            input.erase(input.substr(comentario, '\n'));
+        }
+        */
 
         op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, constante = NULL;
         if (input.empty()) continue; // Ignora linhas em branco
@@ -45,7 +55,6 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato) {
         stringstream ss(input); // passa a linha de instrução do arquivo como parametro
         string comando;
         string variavel;
-        string comentario;
 
         vector<string> variaveis;
         vector<string> registradores;
@@ -56,9 +65,14 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato) {
 
         while (getline(ss, variavel, ',')) { // le cada palavra da linha, separadads por virgula
 
-            
+            size_t abertura_lw_sw = variavel.find("(");
+            size_t fechadura_lw_sw = variavel.find(")");
 
-            if (!variavel.find('$')) { // Verifica se variavel é um registrador 
+            if (abertura_lw_sw != string::npos) {
+                constante = stoi(variavel.substr(0, abertura_lw_sw)); 
+                registradores.push_back(variavel.substr(abertura_lw_sw + 1, fechadura_lw_sw - abertura_lw_sw - 1));
+            }
+            else if (!variavel.find('$')) { // Verifica se variavel é um registrador 
                 registradores.push_back(variavel); // Caso seja vai para o vetor de registradores
             }
             else {
