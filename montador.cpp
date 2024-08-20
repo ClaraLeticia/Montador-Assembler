@@ -10,6 +10,7 @@
 #include "Codificador.h"
 #include "Instrucoes.h"
 #include "cpi.h"
+#include "Labels.h"
 #include <map>
 using namespace std;
 
@@ -18,8 +19,14 @@ int main(int argc, char* argv[]) {
 	string inputArquivo = argv[1]; // arquivo assembly
 	string formato = argv[2]; // '-b' ou '-h'
 	
-	map<string, Comando> qtdInstrucoes = codificarInstrucao(inputArquivo, formato);
-	calcularCPI(qtdInstrucoes);
+	map<string, int> mapLabels = identificandoLabels(inputArquivo);
+
+	for (auto i : mapLabels) {
+		cout << i.first << " " << i.second << endl;
+	}
+
+	map<string, Comando> qtdInstrucoes = codificarInstrucao(inputArquivo, formato, mapLabels);
+	//calcularCPI(qtdInstrucoes);
 
 
 
