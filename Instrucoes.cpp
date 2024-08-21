@@ -28,7 +28,8 @@ void processarVariavel(string variavel, int& constante) {
 
 map<string, Comando> codificarInstrucao( string inputArquivo, string formato, map<string, int> mapLabels) {
     const int endereco_inicial = 0x00400000;
-    int pc = 1;
+    int endereco = endereco_inicial;
+    int pc = 2;
     map<string, Comando> MapComandos = Comandos(); // Mapeando os comandos existentes
     map<string, int> mapRegis = addRegistradores(); // Mapeando os registradores
     int op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, constante = 0; // Inicializando 
@@ -105,6 +106,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
         map<string, Comando> ::iterator it;
         for (it = MapComandos.begin(); it != MapComandos.end(); it++) {
             if (comando == (*it).first) {
+                cout << (*it).first << " ";
                 (*it).second.ocorrencias += 1;
                 switch ((*it).second.tipo)
                 {
@@ -172,7 +174,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                             for (auto j : mapLabels) {
                                 if (variavel == j.first) {
                                     
-                                    constante =  j.second - pc + 1;
+                                    constante =  j.second - pc;
                                 }
                             }
                             
@@ -246,13 +248,14 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
             
         }
 
+        
 
         if (!label) {
+            cout << pc << endl;
             pc++;
             fout.write(&pular, sizeof(pular)); // se não for uma linha vazia com label
+            endereco += 4;   
         }
-
-        
     }
         fin.close();
         fout.close();

@@ -13,7 +13,7 @@ map<string, int> identificandoLabels(string inputArquivo) {
 	string input; // variavel para armazenar a linha de instrução
 	string label;
 	vector<string> labelVetor;
-    int linha = 0;
+    int linha = 1;
     map<string, int>mapLabels;
 
     while (getline(fin, input)) {
@@ -21,9 +21,12 @@ map<string, int> identificandoLabels(string inputArquivo) {
         linha++;
         size_t pos = input.find(':');
         if (pos != string::npos) { // Verifica se a linha contém ':'
+            linha--; // Instrução necessária pois pela restrição de ser uma linha apenas pro label
             label = input.substr(0, pos); // Pega o valor antes dos dois pontos
             mapLabels[label] = linha; 
         }
+
+
     }
 
     fin.close();
