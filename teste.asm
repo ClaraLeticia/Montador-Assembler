@@ -26,4 +26,4 @@ slt $1,$2,$3
 slti $s0,$s1,100
 j L1
 jr $1
-jal L3  #comentario na mesma linha da instrucao
+jal L3 #comentario na mesma linha da instrucao

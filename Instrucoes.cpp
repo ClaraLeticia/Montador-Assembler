@@ -221,6 +221,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                         if (i.first == variavel) {
                             //cout << i.first << " " << i.second;
                             constante = (i.second - 1) * 4 + endereco_inicial;
+                            break;
                         }
                     }
                     
