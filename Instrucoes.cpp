@@ -106,7 +106,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
         map<string, Comando> ::iterator it;
         for (it = MapComandos.begin(); it != MapComandos.end(); it++) {
             if (comando == (*it).first) {
-                cout << (*it).first << " ";
+                
                 (*it).second.ocorrencias += 1;
                 switch ((*it).second.tipo)
                 {
@@ -205,7 +205,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                         fout.write(bitset<32>(codificacao).to_string().c_str(), codificacao.size());
                     }
                     else if (formato == "-h") {
-                        fout << hex << setw(8) << setfill('0') << stoi(codificacao.to_string(), nullptr, 2);
+                        fout << hex << setw(8) << setfill('0') << static_cast<int>(codificacao.to_ulong());;
                     }
 
                     break;
@@ -219,7 +219,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
 
                     for (auto i : mapLabels) {
                         if (i.first == variavel) {
-                            //cout << i.first << " " << i.second;
+                            
                             constante = (i.second - 1) * 4 + endereco_inicial;
                             break;
                         }
@@ -232,7 +232,8 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                     if (formato == "-b") {
                         fout.write(bitset<32>(codificacao).to_string().c_str(), codificacao.size());
                     }
-                    else if (formato == "-h") {
+                    else if (formato == "-h"){
+                     
                         fout << hex << setw(8) << setfill('0') << stoi(codificacao.to_string(), nullptr, 2);
                     }
 
@@ -252,7 +253,6 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
         
 
         if (!label) {
-            cout << pc << endl;
             pc++;
             fout.write(&pular, sizeof(pular)); // se não for uma linha vazia com label
             endereco += 4;   
