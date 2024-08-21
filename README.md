@@ -10,7 +10,7 @@ git clone https://github.com/
 
 ## Como utilizar 
 
-Para utilizar o simualador de assembler, é necessário executar via linha de comando e requer dois parâmetros:
+Para utilizar o simulador de assembler, é necessário executar via linha de comando e requer dois parâmetros:
 
 1. **Arquivo de entrada**: O arquivo `.asm` que contém as instruções a serem codificadas.
 2. **Formato de saída**: O formato do arquivo de saída gerado.
@@ -35,7 +35,7 @@ Para gerar um arquivo hexadecimal:
 
 Para arquivo `.asm` ser corretamente codificado, é necessário seguir as seguintes restrições:
 
-1. **Registradores**: Não devem ser separados por espaços. Exemplo:
+1. **Registradores**: Não devem ser separados por espaços.
    - **Correto**:
      ~~~Assembly
      add $t0,$9,$10
