@@ -21,9 +21,7 @@ int main(int argc, char* argv[]) {
 	
 	map<string, int> mapLabels = identificandoLabels(inputArquivo);
 
-	for (auto i : mapLabels) {
-		cout << i.first << " " << i.second << endl;
-	}
+	
 
 	map<string, Comando> qtdInstrucoes = codificarInstrucao(inputArquivo, formato, mapLabels);
 	//calcularCPI(qtdInstrucoes);

@@ -69,7 +69,6 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
 
         op = 0, rd = 0, rs = 0, rt = 0, sa = 0, funct = 0, constante = NULL;
         if (input.empty()) continue; // Ignora linhas em branco
-        pc++;
         stringstream ss(input); // passa a linha de instrução do arquivo como parametro
         string comando;
         string variavel;
@@ -96,6 +95,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
             else {
                 
                 processarVariavel(variavel, constante);
+               
             }
 
         }
@@ -123,6 +123,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                         rd = registradoresInt[0];
                         rs = registradoresInt[1];
                         rt = registradoresInt[2];
+                        
 
                         codificacao = codificador_typeR((*it).second.opcode, rd, rs, rt, (*it).second.constante, (*it).second.func); // Codifica a instrução                    
                     }
@@ -170,7 +171,8 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                         if ((*it).second.opcode == 4 or (*it).second.opcode == 5) { // restrição para o 'beq' e 'bne'
                             for (auto j : mapLabels) {
                                 if (variavel == j.first) {
-                                    constante = j.second - pc;
+                                    
+                                    constante =  j.second - pc + 1;
                                 }
                             }
                             
@@ -180,7 +182,7 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                             constante = static_cast<int>(bits.to_ulong()); // Transformando um numero binário para inteiro
 
                             codificacao = codificador_typeI((*it).second.opcode, rs, rt, constante); // Codifica a instrução  
-                            cout << endl << codificacao;
+                           
                         }
                         else { // todos os outros comandos
                             rs = registradoresInt[1];
@@ -215,11 +217,12 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
 
                     for (auto i : mapLabels) {
                         if (i.first == variavel) {
-                            constante = i.second  * 4 + endereco_inicial;
+                            //cout << i.first << " " << i.second;
+                            constante = (i.second - 1) * 4 + endereco_inicial;
                         }
                     }
                     
-                    cout << constante;
+                    constante /= 4;
 
                     codificacao = codificador_typeJ((*it).second.opcode, constante); // Codifica a instrução
                     
@@ -236,16 +239,20 @@ map<string, Comando> codificarInstrucao( string inputArquivo, string formato, ma
                 default:
                     break;
                 }
+                
                     
                 break;
             }
-           
+            
         }
 
+
         if (!label) {
+            pc++;
             fout.write(&pular, sizeof(pular)); // se não for uma linha vazia com label
         }
 
+        
     }
         fin.close();
         fout.close();
