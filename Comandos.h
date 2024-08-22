@@ -3,16 +3,19 @@
 #include <map>
 using namespace std;
 
-struct RComando {
+struct Comando {
 	string nome;
 	char tipo;
 	int opcode;
 	int rs;
 	int rt;
 	int rd;
-	int sa;
+	int constante; // Comandos tipo R = shamt;  Comandos tipo I = imediato; Comandos tipo J = endereço
 	int func;
+	int ocorrencias = 0;
 };
 
-map<string, RComando> addRComandos();
+
+
+map<string, Comando> Comandos();
 map<string, int> addRegistradores();
